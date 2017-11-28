@@ -8,4 +8,4 @@ import { AlbumsComponent } from './albums/albums.component';
   ],
   declarations: [AlbumsComponent]
 })
-export class FacebookModule { }
+export class AlbumsModule { }

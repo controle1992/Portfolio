@@ -4,8 +4,9 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import {CoreModule} from './core/core.module';
 import {AuthModule} from './auth/auth.module';
-import {FacebookModule} from './facebook/facebook.module';
+import {AlbumsModule} from './albums/albums.module';
 import {routing} from './app.routing';
+import {FacebookModule} from 'ngx-facebook';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import {routing} from './app.routing';
     BrowserModule,
     CoreModule,
     AuthModule,
-    FacebookModule,
+    AlbumsModule,
+    FacebookModule.forRoot(),
     routing
   ],
   providers: [],
