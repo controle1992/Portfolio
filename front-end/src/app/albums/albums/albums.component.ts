@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FacebookService, LoginOptions, LoginResponse} from 'ngx-facebook';
 import {Observable} from 'rxjs/Observable';
-import {AuthService} from '../../auth/Services/auth.service';
-import {forEach} from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-albums',
@@ -11,7 +9,9 @@ import {forEach} from '@angular/router/src/utils/collection';
 })
 export class AlbumsComponent implements OnInit {
 
-  album: number[];
+  album: any;
+  mode = 1;
+  user: any;
 
   constructor(private fb: FacebookService) {
     fb.init({
@@ -28,16 +28,6 @@ export class AlbumsComponent implements OnInit {
   }
 
   ngOnInit() {
-/*    const loginOptions: LoginOptions = {
-      enable_profile_selector: true,
-      return_scopes: true,
-      scope: 'user_photos'
-    };
-    this.fb.login(loginOptions)
-      .then((res: LoginResponse) => {
-        console.log(res);
-      })
-      .catch(AlbumsComponent.handleError);*/
   }
 
   connect() {
@@ -48,19 +38,22 @@ export class AlbumsComponent implements OnInit {
     };
     this.fb.login(loginOptions)
       .then((res: LoginResponse) => {
-        console.log(res);
+        this.user = res;
+        console.log(this.user['authResponse']['accessToken']);
       })
       .catch(AlbumsComponent.handleError);
   }
 
   getAlbums() {
-    this.fb.api('/me/albums?fields=id')
+    console.log('hello')
+    this.fb.api('/me/albums'/*?fields=id,cover_photo*/)
       .then((res: any) => {
       this.album = res;
-      console.log('test', this.album);
-        //console.log('got the user albums', this.album);
+      console.log(this.album);
+      this.mode = 2;
       })
       .catch(AlbumsComponent.handleError);
+    //const album_cont = this.album['data'].length;
   }
 
 }

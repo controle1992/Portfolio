@@ -4,6 +4,7 @@ import {AlbumsComponent} from './albums/albums/albums.component';
 import {AuthGuard} from './auth/Services/auth-guard.service';
 import {ModuleWithProviders} from '@angular/core';
 import {LoginComponent} from './auth/components/login/login.component';
+import {PhotosComponent} from "./albums/photos/photos.component";
 
 const appRoutes: Routes = [
   {
@@ -23,6 +24,10 @@ const appRoutes: Routes = [
     path: 'albums',
     component: AlbumsComponent,
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'photos',
+    component: PhotosComponent
   }
 ];
 
