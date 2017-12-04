@@ -1,14 +1,11 @@
 <div class="container">
-  <button class="btn btn-primary spacer" (click)="connect()">Connect to facebook</button>
-  <button class="btn btn-primary spacer" (click)="getAlbums()">fetch Albums</button>
-  <div class="col-lg-12">
-    <h1 class="page-header">Albums</h1>
-  </div>
-  <div *ngIf="mode==2">
-  <div class="col-md-4" *ngFor="let p of album['data']">
-    <a routerLink="/photos">
-      <img class='img-responsive' src="https://graph.facebook.com/v2.9/{{p['id']}}/picture?access_token={{user['authResponse']['accessToken']}}">
-    </a>
-  </div>
-  </div>
+    <div class="col-lg-12">
+      <h1 class="page-header">Albums</h1>
+    </div>
+    <div class="col-md-4" *ngFor="let p of album['data']">
+      <a [routerLink]="['/photos']" [queryParams]="{albumId: p['id'], userToken: user['authResponse']['accessToken']}">
+        <img class='img-responsive' src="https://graph.facebook.com/v2.9/{{p['id']}}/picture?access_token={{user['authResponse']['accessToken']}}"/>
+        <p>{{p['name']}}</p>
+      </a>
+    </div>
 </div>

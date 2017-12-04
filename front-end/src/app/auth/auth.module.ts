@@ -6,12 +6,14 @@ import {FormsModule} from '@angular/forms';
 import {HttpModule} from '@angular/http';
 import {AuthService} from './Services/auth.service';
 import {AuthGuard} from './Services/auth-guard.service';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     HttpModule,
+    RouterModule
   ],
   providers: [AuthService, AuthGuard],
   declarations: [RegisterComponent, LoginComponent],

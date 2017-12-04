@@ -1,0 +1,8 @@
+<div class="container">
+  <div class="col-lg-12">
+    <h1 class="page-header"><a routerLink="/albums">Albums</a>/Photos</h1>
+  </div>
+    <div class="col-md-4" *ngFor="let p of photos['data']">
+        <img class='img-responsive' src="{{p['images'][0]['source']}}"/>
+    </div>
+</div>

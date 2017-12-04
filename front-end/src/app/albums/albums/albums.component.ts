@@ -10,11 +10,11 @@ import {Observable} from 'rxjs/Observable';
 export class AlbumsComponent implements OnInit {
 
   album: any;
-  mode = 1;
   user: any;
+  photos: any;
 
-  constructor(private fb: FacebookService) {
-    fb.init({
+  constructor(public fbs: FacebookService) {
+    fbs.init({
       appId: '1592468820788220',
       version: 'v2.9'
     });
@@ -28,6 +28,7 @@ export class AlbumsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.connect();
   }
 
   connect() {
@@ -36,24 +37,20 @@ export class AlbumsComponent implements OnInit {
       return_scopes: true,
       scope: 'user_photos'
     };
-    this.fb.login(loginOptions)
+    this.fbs.login(loginOptions)
       .then((res: LoginResponse) => {
         this.user = res;
-        console.log(this.user['authResponse']['accessToken']);
+        this.getAlbums();
       })
       .catch(AlbumsComponent.handleError);
   }
 
   getAlbums() {
-    console.log('hello')
-    this.fb.api('/me/albums'/*?fields=id,cover_photo*/)
+    this.fbs.api('/me/albums')
       .then((res: any) => {
       this.album = res;
-      console.log(this.album);
-      this.mode = 2;
       })
       .catch(AlbumsComponent.handleError);
-    //const album_cont = this.album['data'].length;
   }
 
 }

@@ -7,6 +7,7 @@ import {AuthModule} from './auth/auth.module';
 import {AlbumsModule} from './albums/albums.module';
 import {routing} from './app.routing';
 import {FacebookModule} from 'ngx-facebook';
+import {RouterModule} from "@angular/router";
 
 @NgModule({
   declarations: [
