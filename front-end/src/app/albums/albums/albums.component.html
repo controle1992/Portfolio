@@ -1,11 +1,21 @@
 <div class="container">
+  <div *ngIf="mode == 1">
     <div class="col-lg-12">
       <h1 class="page-header">Albums</h1>
     </div>
     <div class="col-md-4" *ngFor="let p of album['data']">
-      <a [routerLink]="['/photos']" [queryParams]="{albumId: p['id'], userToken: user['authResponse']['accessToken']}">
-        <img class='img-responsive' src="https://graph.facebook.com/v2.9/{{p['id']}}/picture?access_token={{user['authResponse']['accessToken']}}"/>
+      <a class="clickable" (click)="getPhotos(p['id'])">
+        <img class='img-responsive' src="https://graph.facebook.com/v2.11/{{p['id']}}/picture?access_token={{user['authResponse']['accessToken']}}"/>
         <p>{{p['name']}}</p>
       </a>
     </div>
+  </div>
+  <div *ngIf="mode == 2">
+    <div class="col-lg-12">
+      <h1 class="page-header"><a class="clickable" (click)="getAlbums(user['authResponse']['userID'])">Albums</a>/Photos</h1>
+    </div>
+    <div class="col-md-4" *ngFor="let p of photos['data']">
+      <img class='img-responsive' src="{{p['source']}}"/>
+    </div>
+  </div>
 </div>

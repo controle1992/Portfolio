@@ -9,14 +9,15 @@ import {Observable} from 'rxjs/Observable';
 })
 export class AlbumsComponent implements OnInit {
 
-  album: any;
-  user: any;
-  photos: any;
+  album: any = [];
+  user: any = [];
+  photos: any = [];
+  mode = 1;
 
-  constructor(public fbs: FacebookService) {
+  constructor(private fbs: FacebookService) {
     fbs.init({
       appId: '1592468820788220',
-      version: 'v2.9'
+      version: 'v2.11'
     });
   }
 
@@ -40,17 +41,27 @@ export class AlbumsComponent implements OnInit {
     this.fbs.login(loginOptions)
       .then((res: LoginResponse) => {
         this.user = res;
-        this.getAlbums();
+        this.getAlbums(this.user['authResponse']['userID']);
       })
       .catch(AlbumsComponent.handleError);
   }
 
-  getAlbums() {
-    this.fbs.api('/me/albums')
+  getAlbums(userId: string) {
+    this.fbs.api('/' + userId + '/albums')
       .then((res: any) => {
       this.album = res;
       })
       .catch(AlbumsComponent.handleError);
+    this.mode = 1;
+  }
+
+  getPhotos(albumId: string) {
+    this.fbs.api('/' + albumId + '/photos?fields=source')
+      .then((res: any) => {
+      this.photos = res;
+      })
+      .catch(AlbumsComponent.handleError);
+    this.mode = 2;
   }
 
 }
