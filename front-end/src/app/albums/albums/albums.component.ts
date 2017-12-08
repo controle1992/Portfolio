@@ -1,6 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FacebookService, LoginOptions, LoginResponse} from 'ngx-facebook';
 import {Observable} from 'rxjs/Observable';
+import {ActivatedRoute} from '@angular/router';
+import 'rxjs/add/operator/filter';
+import {UserService} from '../../core/services/user.service';
+import {User} from '../../core/model/user.model';
+import {Http} from '@angular/http';
 
 @Component({
   selector: 'app-albums',
@@ -9,19 +14,22 @@ import {Observable} from 'rxjs/Observable';
 })
 export class AlbumsComponent implements OnInit {
 
+  email = '';
+  model: User;
   album: any = [];
-  user: any = [];
   photos: any = [];
   mode = 1;
 
-  constructor(private fbs: FacebookService) {
-    fbs.init({
-      appId: '1592468820788220',
+  constructor(private facebookService: FacebookService, private route: ActivatedRoute, private userService: UserService,
+              private http: Http) {
+    this.model = new User();
+    facebookService.init({
+      appId: '199416317297030',
       version: 'v2.11'
     });
   }
 
-  private static handleError(error: any) {
+  public static handleError(error: any) {
     const errorMessage = (error.message) ? error.message :
       error.status ? `${error.status} - ${error.statusText}` : `Server error`;
     console.log(errorMessage);
@@ -29,39 +37,63 @@ export class AlbumsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.connect();
+    this.route.queryParams
+      .filter(params => params.email)
+      .subscribe(params => {
+        this.email = params.email;
+      });
+    this.userService.getUser(this.email)
+      .subscribe(data => {
+        this.model = data;
+        if (User.tokenNull(data)) {
+          this.mode = 0;
+        } else {
+          this.getAlbums();
+        }
+      });
   }
 
-  connect() {
-    const loginOptions: LoginOptions = {
-      enable_profile_selector: true,
-      return_scopes: true,
-      scope: 'user_photos'
-    };
-    this.fbs.login(loginOptions)
-      .then((res: LoginResponse) => {
-        this.user = res;
-        this.getAlbums(this.user['authResponse']['userID']);
-      })
-      .catch(AlbumsComponent.handleError);
+  verifyToken() {
+    if (User.tokenNull(this.model)) {
+      const loginOptions: LoginOptions = {
+            enable_profile_selector: true,
+            return_scopes: true,
+            scope: 'user_photos'
+          };
+          this.facebookService.login(loginOptions)
+            .then((res: LoginResponse) => {
+              this.model.accessToken = res['authResponse']['accessToken'];
+              this.model.facebookId = res['authResponse']['userID'];
+              this.userService.accessToken(this.model)
+                .subscribe(data => {
+                  this.userService.getUser(this.email)
+                    .subscribe(user => {
+                      this.model = user;
+                      this.getAlbums();
+                      this.facebookService.logout().then();
+                    });
+                });
+              this.mode = 1;
+            })
+            .catch(AlbumsComponent.handleError);
+    }
   }
 
-  getAlbums(userId: string) {
-    this.fbs.api('/' + userId + '/albums')
-      .then((res: any) => {
-      this.album = res;
-      })
-      .catch(AlbumsComponent.handleError);
+  getAlbums() {
+    this.http.get('https://graph.facebook.com/v2.11/' + this.model.facebookId + '/albums?access_token=' + this.model.accessToken)
+      .map(res => res.json())
+      .subscribe(data => {
+        this.album = data;
+      });
     this.mode = 1;
   }
 
   getPhotos(albumId: string) {
-    this.fbs.api('/' + albumId + '/photos?fields=source')
-      .then((res: any) => {
-      this.photos = res;
-      })
-      .catch(AlbumsComponent.handleError);
+    this.http.get('https://graph.facebook.com/v2.11/' + albumId + '/photos?fields=source&access_token=' + this.model.accessToken)
+      .map(res => res.json())
+      .subscribe(data => {
+        this.photos = data;
+      });
     this.mode = 2;
   }
-
 }

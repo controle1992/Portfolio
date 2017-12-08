@@ -19,8 +19,8 @@ public class UserController {
         return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable Long id) {
-        return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
+    @RequestMapping(value = "/user/", method = RequestMethod.POST)
+    public ResponseEntity<?> getUser(@RequestBody String email) {
+        return new ResponseEntity<>(userService.findUserByEmail(email), HttpStatus.OK);
     }
 }

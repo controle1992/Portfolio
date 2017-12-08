@@ -11,7 +11,8 @@ import {Router} from '@angular/router';
 export class LoginComponent implements OnInit {
 
   model: User;
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit() {
     this.model = new User();
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
       .login(this.model)
       .subscribe(isLoggedIn => {
         if (isLoggedIn) {
-          this.router.navigate(['/albums']);
+         this.router.navigate(['/albums'], {queryParams: {email: this.model.email}});
         } else {
           alert('Email/password incorrect!');
         }

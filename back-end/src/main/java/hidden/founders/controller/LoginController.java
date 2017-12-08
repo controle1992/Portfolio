@@ -27,4 +27,9 @@ public class LoginController {
         }
         return new ResponseEntity<>(userService.findUserByEmail(user.getEmail()), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/accessToken", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getToken(@RequestBody User user) {
+        return new ResponseEntity<>(userService.getLongAccessToken(user), HttpStatus.OK);
+    }
 }
