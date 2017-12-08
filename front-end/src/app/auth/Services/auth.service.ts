@@ -5,17 +5,12 @@ import {User} from '../../core/model/user.model';
 import {URL} from '../../app.component';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/of';
-import {FacebookService, LoginOptions, LoginResponse} from 'ngx-facebook';
 
 @Injectable()
 export class AuthService {
   isLoggedIn = false;
 
-  constructor(private http: Http, private facebookService: FacebookService) {
-    facebookService.init({
-      appId: '199416317297030',
-      version: 'v2.11'
-    });
+  constructor(private http: Http) {
   }
 
   private static handleError(error: any) {
@@ -26,28 +21,16 @@ export class AuthService {
   }
 
   login(user: User): Observable<boolean> {
+    /*
+      user: user to log in
+      returns true if he's in the database,
+      else returns false
+     */
     return this.http.post(URL + '/login', user)
       .map(res => res.json())
       .map((currentUser: User) => {
         if (!User.isNull(currentUser)) {
           this.isLoggedIn = true;
-          // if (User.tokenNull(currentUser)) {
-          //   const loginOptions: LoginOptions = {
-          //     enable_profile_selector: true,
-          //     return_scopes: true,
-          //     scope: 'user_photos'
-          //   };
-          //   this.facebookService.login(loginOptions)
-          //     .then((res: LoginResponse) => {
-          //       console.log(res);
-          //       currentUser.accessToken = res['authResponse']['accessToken'];
-          //       currentUser.facebookId = res['authResponse']['userID'];
-          //       this.accessToken(currentUser)
-          //         .subscribe();
-          //       this.facebookService.logout().then();
-          //     })
-          //     .catch(AuthService.handleError);
-          // }
           return true;
         } else {
           this.isLoggedIn = false;
@@ -57,12 +40,12 @@ export class AuthService {
       .catch(AuthService.handleError);
   }
 
-  logOut(): Observable<boolean> {
-    this.isLoggedIn = !this.isLoggedIn;
-    return Observable.of(false);
-  }
-
   register(user: User): Observable<boolean> {
+    /*
+      user: user to register
+      returns false if he's already in the database,
+      else returns false
+     */
     return this.http.post(URL + '/register', user)
       .map(response => response.json() as User)
       .map(currentUser => !User.isNull(currentUser))

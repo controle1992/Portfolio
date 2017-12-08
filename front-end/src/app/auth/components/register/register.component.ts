@@ -18,6 +18,11 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
+    /*
+      create user
+      Redirect to login component if the user is created,
+      else get alert message
+     */
     this.authService
       .register(this.model)
       .subscribe(isRegistered => {

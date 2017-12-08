@@ -19,6 +19,11 @@ public class LoginController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> login(@RequestBody User user) {
+        /*
+            user: user sent by the front end to verify login
+            returns http response with the user object if it's find in the database,
+            else return an empty user object
+        */
         if (StringUtils.isEmpty(user.getEmail()) || StringUtils.isEmpty(user.getPassword())) {
             return new ResponseEntity<>(new User(), HttpStatus.OK);
         }
@@ -30,6 +35,10 @@ public class LoginController {
 
     @RequestMapping(value = "/accessToken", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getToken(@RequestBody User user) {
+        /*
+            user: user requesting a long term access token
+            returns http response with the user object with a long term access token
+        */
         return new ResponseEntity<>(userService.getLongAccessToken(user), HttpStatus.OK);
     }
 }

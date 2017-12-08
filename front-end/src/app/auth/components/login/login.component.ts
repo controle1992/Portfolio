@@ -19,6 +19,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
+    /*
+      Verify the user
+      Redirect to albums component if the user is verified,
+      else get alert message
+     */
     this.authService
       .login(this.model)
       .subscribe(isLoggedIn => {

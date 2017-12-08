@@ -18,6 +18,11 @@ public class RegisterController {
 
     @RequestMapping(value = "/register", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> register(@RequestBody User user) {
+        /*
+            user: The user sent by the front end for storing
+            returns http response with an empty user object if it's find in the database,
+            else return http response with the created user
+        */
         if (userService.findUserByEmail(user.getEmail()) != null) {
             return new ResponseEntity<>(new User(), HttpStatus.OK);
         }

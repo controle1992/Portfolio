@@ -23,8 +23,9 @@ export class AlbumsComponent implements OnInit {
   constructor(private facebookService: FacebookService, private route: ActivatedRoute, private userService: UserService,
               private http: Http) {
     this.model = new User();
+    // init the facebook parameters
     facebookService.init({
-      appId: '199416317297030',
+      appId: '162201394391436',
       version: 'v2.11'
     });
   }
@@ -37,24 +38,22 @@ export class AlbumsComponent implements OnInit {
   }
 
   ngOnInit() {
+    // receive the user email
     this.route.queryParams
       .filter(params => params.email)
       .subscribe(params => {
         this.email = params.email;
       });
+    // fetching user albums
     this.userService.getUser(this.email)
       .subscribe(data => {
         this.model = data;
-        if (User.tokenNull(data)) {
-          this.mode = 0;
-        } else {
           this.getAlbums();
-        }
       });
   }
 
-  verifyToken() {
-    if (User.tokenNull(this.model)) {
+  getToken() {
+    // log in to the app
       const loginOptions: LoginOptions = {
             enable_profile_selector: true,
             return_scopes: true,
@@ -64,36 +63,46 @@ export class AlbumsComponent implements OnInit {
             .then((res: LoginResponse) => {
               this.model.accessToken = res['authResponse']['accessToken'];
               this.model.facebookId = res['authResponse']['userID'];
+              // Requesting long term access token
               this.userService.accessToken(this.model)
                 .subscribe(data => {
+                  // fetching the user albums
                   this.userService.getUser(this.email)
                     .subscribe(user => {
                       this.model = user;
                       this.getAlbums();
+                      // log out from the app
                       this.facebookService.logout().then();
                     });
                 });
-              this.mode = 1;
             })
             .catch(AlbumsComponent.handleError);
-    }
   }
 
   getAlbums() {
+    // fetching the albums
     this.http.get('https://graph.facebook.com/v2.11/' + this.model.facebookId + '/albums?access_token=' + this.model.accessToken)
       .map(res => res.json())
       .subscribe(data => {
         this.album = data;
+        this.mode = 1;
+      }, err => {
+        this.mode = 0;
       });
-    this.mode = 1;
   }
 
   getPhotos(albumId: string) {
+    /*
+      albumId: the id of the album
+      fetching photos of the album
+     */
     this.http.get('https://graph.facebook.com/v2.11/' + albumId + '/photos?fields=source&access_token=' + this.model.accessToken)
       .map(res => res.json())
       .subscribe(data => {
         this.photos = data;
+        this.mode = 2;
+      }, err => {
+        this.mode = 0;
       });
-    this.mode = 2;
   }
 }

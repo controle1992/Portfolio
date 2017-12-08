@@ -10,18 +10,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.util.Iterator;
 import java.util.List;
 @Service
 public class UserServiceImpl implements UserService{
 
-    private final String appId="199416317297030";
-    private final String appSecret="37977dce691cf12d227ce05cfb755344";
+    // facebook appId
+    private final String appId="162201394391436";
+    //facebook appSecret
+    private final String appSecret="e3b265e3330f90c29fe18f1920c2aba4";
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    //restTemplate is used to call the facebook graphAPI to get long term access token
     private RestTemplate restTemplate;
 
 
@@ -29,12 +31,6 @@ public class UserServiceImpl implements UserService{
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
-
-    @PostConstruct
-    private void populateSampleData() {
-        userRepository.save(new User("email@test", "pass"));
-    }
-
 
     @Override
     public List<User> getUsers() {
@@ -44,16 +40,28 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUser(Long id) {
+        /*
+            id: the id of the user to look for
+            returns the user
+        */
         return userRepository.findOne(id);
     }
 
     @Override
     public User createUser(User user) {
+         /*
+            user: the user to store in the database
+            returns the stored user
+        */
         return userRepository.save(user);
     }
 
     @Override
     public User getLongAccessToken(User user) {
+         /*
+            user: the user that want long term access token
+            returns the stored user with long term access token
+        */
         user.setId(findUserByEmail(user.getEmail()).getId());
         FacebookToken facebookToken = restTemplate.getForObject("https://graph.facebook.com/oauth/access_token?" +
                "grant_type=fb_exchange_token&" +
@@ -66,11 +74,20 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User findUserByEmail(String email) {
+         /*
+            email: the email of the user to look for
+            returns the user
+        */
         return userRepository.findOneByEmail(email);
     }
 
     @Override
     public User findUserByEmailAndPassword(String email, String password) {
+        /*
+            email: the email of the user to look for
+            password: the password of the user to look for
+            returns the user
+        */
         return userRepository.findOneByEmailAndPassword(email, password);
     }
 }

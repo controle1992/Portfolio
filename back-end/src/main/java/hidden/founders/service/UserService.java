@@ -2,7 +2,6 @@ package hidden.founders.service;
 
 import hidden.founders.model.User;
 
-import javax.jws.soap.SOAPBinding;
 import java.util.List;
 public interface UserService {
     List<User> getUsers();

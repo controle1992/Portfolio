@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'app';
 }
-
+// the back end url
 export const URL = 'http://localhost:8080/back';

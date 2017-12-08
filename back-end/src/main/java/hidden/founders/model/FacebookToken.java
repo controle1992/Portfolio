@@ -1,5 +1,7 @@
 package hidden.founders.model;
 
+// This class is used to retreive the facebook response with long term access token
+
 public class FacebookToken {
     private String access_token;
     private String token_type;

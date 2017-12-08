@@ -8,11 +8,6 @@ export class User {
   constructor() {
   }
 
-  public static tokenNull (user: User): boolean {
-    return user.facebookId === null &&
-      user.accessToken === null;
-  }
-
   public static isNull (user: User): boolean {
     return user.email === null &&
       user.password === null;
