@@ -50,7 +50,7 @@ npm start
 http://localhost:4200
 ```
 
-##Notes
+## Notes
 
 I recommend using a private browsing to avoid any conflict with active facebook session already open in the browser.
 
