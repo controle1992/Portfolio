@@ -22,12 +22,12 @@ These instructions will get you a copy of the project up and running on your loc
 
 1 . Clone the repository in your local machine
 ```
-git clone https://github.com/controle1992/hiddenFounders.git
+git clone https://github.com/controle1992/Portfolio.git
 ```
 
 2 . Change directory
 ```
-cd hiddenFounders/back-end
+cd Portfolio/back-end
 ```
 3 . Build project
 ```
@@ -39,7 +39,7 @@ java -jar targer/back-end-1.0.jar
 ```
 5 . Open a new terminal and start the client
 ```
-cd hiddenFounders/front-end && 
+cd Portfolio/front-end && 
 ```
 6 . Start the front-end
 ```
