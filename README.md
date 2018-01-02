@@ -1,4 +1,4 @@
-# HiddenFounders coding challenge
+# Chouaib Moussaddaq Portfolio
 
 This is a small Facebook-powered web app. The goal of the app is to let the user export his photos from Facebook.
 ## Getting Started
